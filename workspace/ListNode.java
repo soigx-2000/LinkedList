@@ -11,8 +11,7 @@ public class ListNode
 
 	// pre-condition: initValue is a valid Object and initNext is valid ListNode.
 	// post-condition: value equals initValue and next equals initNext.
-	public ListNode (String initValue,
-					 ListNode initNext)
+	public ListNode (String initValue, ListNode initNext)
 	{
 		value = initValue;
 		next = initNext;
