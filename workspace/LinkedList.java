@@ -159,21 +159,45 @@ public class LinkedList{
     this.length = 0;
   }
   public void reverse(){
-		ListNode temp = null;
-    boolean loop = true;
 		if(length == 1){
 		}
     else{
-      while(loop){
-        temp = head.getNext().getNext();
-        if(temp == null){
-          loop = false;
+      ListNode prev = head;
+      ListNode curr = head.getNext();
+      ListNode next = curr.getNext();
+      while(curr != null){
+        if(head == prev){
+          prev.setNext(null);
         }
-        head.getNext().setNext(head);
-        head.setNext(null);
-        
+        curr.setNext(prev);
+        prev = curr;
+        curr = next;
+        if(next != null){
+          next = next.getNext();
+        }
       }
+      head = prev;
     }
+      public void nReverse(int n){
+        if (length < n){
+        }
+        else{
+          ListNode prev = head;
+          ListNode curr = head.getNext();
+          ListNode next = curr.getNext();
+          for(int i = 0; i < length/n; i++){}
+            for (int j = 1 ,   ; j < n; j++){
+              if(head == prev){
+                prev.setNext(null);
+              }
+              curr.setNext(prev);
+              prev = curr;
+              curr = next;
+            }
+          }
+        }
+      }
+
 	}
   public static void main(String[] args) {
     LinkedList list = new LinkedList();
@@ -186,7 +210,7 @@ public class LinkedList{
     System.out.println(list.showValues());
     list.deleteAValue("dog");
     System.out.println(list.showValues());
-    list.clear();
+    list.reverse();
     System.out.println(list.showValues());
   }
 }
