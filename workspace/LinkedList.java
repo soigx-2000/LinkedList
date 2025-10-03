@@ -1,4 +1,4 @@
-/*
+/* Ziru Zhou // period 3 // CS programing 3
 Problem:  Write a program that keeps and manipulates a linked list of
 	    String data. The data will be provided by the user one item at a time.
       The user should be able to do the following operations:
@@ -18,11 +18,9 @@ public class LinkedList{
   //instance varialbes go here (think about what you need to keep track of!)
     private int length = -1;
     private ListNode head;
-    private ListNode curr;
   //constructors go here
   public LinkedList(){
     this.head = null;
-    this.curr = null;
     this.length = 0;
   }
   public int getLength(){
@@ -41,40 +39,37 @@ public class LinkedList{
         return head;
       // return to stop the method
     }
-    if (curr == null){
-      // if curr is empty, no recursion has taken place, we will set it to head to begin
-      curr = head;
-    }
+
     if (line.compareTo(head.getValue()) < 0){// attach in front: line come before head in alphabet
-      ListNode a = head;// store head Node before setting new head node
-      head = new ListNode(line, a);
-      curr = null;// set curr back to null once we done recursing
+      head = new ListNode(line, head);
       length++;
       return head;
     }
     // recursion below
-    if (curr.getNext() == null){// base case 1
+
+    return addAValue(head, line);
+  }
+
+  //precondition: line is not null
+  //postcondition: adds line in the propper location into the list
+  private ListNode addAValue(ListNode curr, String line){
+     if (curr.getNext() == null){// base case 1
       // if the next value is null, we reach the end, point the current last node to the new node and point the new node to null
       curr.setNext(new ListNode(line, null));
       length++;
-      ListNode a = curr.getNext();// get a copy to return before it is gone forever
-      curr = null;// set curr back to null once we done recursing
-      return a;
+      return curr.getNext();
     }
     else if(curr.getNext().getValue().toLowerCase().compareTo(line.toLowerCase()) < 0){// recursive case
       // if next value is lower than line alphabetically, set curr to next and repeat the method
-      curr = curr.getNext();
-      addAValue(line);
+      return addAValue(curr.getNext(), line);
     }
     else{// base case 2
       // if next is after line alphabetically (None case sensitive), we are at the right spot to put line
       ListNode q = new ListNode (line, curr.getNext());//attach the new list node to the correct node
       curr.setNext(q);
       length++;
-      curr = null;// set curr back to null once we done recursing
       return q;
     }
-    return null;
   }
   
 
@@ -88,45 +83,42 @@ public class LinkedList{
       // if head is null, there will be nothing to delete;
         return null;
     }
-    else{
-      if (head.getValue().equals(line)){
+    else if (head.getValue().equals(line)){
         // if head match the delete node
         length--;
         ListNode a = head;// get a copy to return before it is gone forever
         head = head.getNext();
         return a;
-      }
-      if (curr == null){
-        // if curr is empty, no recursion has taken place, we will set it to head to begin
-        curr = head;
-      }
-      // recursion below
-      if (curr.getNext().getValue().equals(line)){// base case 1
-        // if the next value is match, we will remove it
-        ListNode a = curr.getNext();// get a copy to return before it is gone forever
-        curr.setNext(a.getNext());// with no reference to that node what so ever, it is forever forgoten and deleted
-        curr = null;// set curr back to null once we done recursing
-        length--;
-        return a;
-      }
-      else if (curr.getNext() == null){// base case 2
-        // if we reach the end and got nothing, there is nothing to delete.
-        curr = null;// set curr back to null once we done recursing
-        return null;
-      }
-      else{// recursive case
-        // if next value is not found or null, set curr to next and repeat the method
-        curr = curr.getNext();
-        deleteAValue(line);
-      }
     }
-  return null;
+    else{
+      return deleteAValue(head, line);
+    }
+  }
+  public ListNode deleteAValue(ListNode curr, String line){
+    // recursion below
+    if (curr.getNext().getValue().equals(line)){// base case 1
+      // if the next value is match, we will remove it
+      ListNode a = curr.getNext();// get a copy to return before it is gone forever
+      curr.setNext(a.getNext());// with no reference to that node what so ever, it is forever forgoten and deleted
+      curr = null;// set curr back to null once we done recursing
+      length--;
+      return a;
+    }
+    else if (curr.getNext() == null){// base case 2
+      // if we reach the end and got nothing, there is nothing to delete.
+      return null;
+    }
+    else{// recursive case
+      // if next value is not found or null, set curr to next and repeat the method
+      return deleteAValue(curr.getNext(), line);
+    }
   }
 
   //precondition: the list has been initialized
   //postconditions: returns a string containing all values appended together with spaces between.
   public String showValues()
   {
+    ListNode curr = null;
     System.out.println("show");
     String result = "";
     if (head == null){
@@ -136,20 +128,6 @@ public class LinkedList{
     else{
       curr = head;// now I won't get Null Pointer Exeption
     }
-    /*
-    //recursive case
-    if(curr.getNext() != null){// meaning we didn't the end of the list
-      ListNode a = curr ;//save current before it become the next;
-      curr = curr.getNext();// move curr to next to continue recursing
-      return (a.getValue() + " " + showValues());
-    }
-    //base case
-    else{// we reach the end of the list
-      ListNode a = curr ;//save current before it become the next;
-      curr = null;// set curr back to null once we done recursing
-      return a.getValue();// return the last value
-    }
-      */
     while(curr.getNext() != null){
       result += curr.getValue() + " ";
       curr = curr.getNext();
@@ -243,10 +221,11 @@ public class LinkedList{
     list.addAValue("elephant");
     list.addAValue("dog");
     list.addAValue("cat");
-    list.addAValue("ant");
+    list.addAValue("bee");
+    System.out.println(list.addAValue("ant").getValue());
     list.addAValue("zebra");
     System.out.println(list.showValues());
-    list.nReverse(3);
+    list.deleteAValue("cat");
     System.out.println(list.showValues());
   }
 }
