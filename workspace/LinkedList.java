@@ -119,7 +119,6 @@ public class LinkedList{
   public String showValues()
   {
     ListNode curr = null;
-    System.out.println("show");
     String result = "";
     if (head == null){
       // if head is null, there will be nothing to show;
@@ -166,10 +165,10 @@ public class LinkedList{
     }
   }
   public void nReverse(int n){
-    if (length < n || n < 2){
+    if (length < n || n < 2){// nothing to reverse or invalid n
       return;
     }
-    else if(length < 2*n){
+    else if(length < 2*n){// only one chunk to reverse
       ListNode prev = null;
       ListNode curr = head;
       ListNode next = curr.getNext();
@@ -193,10 +192,10 @@ public class LinkedList{
       ListNode prev = null;
       ListNode curr = head;
       ListNode next = curr.getNext();
-      ListNode lastChunkTail = null;
-      ListNode thisChunkTail = null;
+      ListNode lastChunkTail = null;// the tail of the last chunk(after reversed)
+      ListNode thisChunkTail = null;// the tail of the current chunk(before reversed)
       for(int i = 0;  i < length/n; i++){
-        thisChunkTail = curr;
+        thisChunkTail = curr;// the head of the current chunk(before reversed), which will be the tail after reversed
         for(int j = 0; j < n ; j++){
           curr.setNext(prev);
           prev = curr;
@@ -204,15 +203,18 @@ public class LinkedList{
           if(next != null){
             next = next.getNext();
           }
+          // each iteration, curr points to the prev instead of next; and each node moves one step forward -- this happend n times
         }
-        if(lastChunkTail == null){
-          head = prev;
+        if(lastChunkTail == null){// first chunk
+          head = prev;// prev, the tail of the unreversed first chunk, will be the head of it -- therefore the head of the whole list
         }
         else{
-          lastChunkTail.setNext(prev);
+          lastChunkTail.setNext(prev);// prev, the tail of the unreversed the this chunk, will be the head of it;
+          // attach last reversed chunk tail to it
         }
-        thisChunkTail.setNext(curr);
-        lastChunkTail = thisChunkTail;
+        thisChunkTail.setNext(curr); // attach the tail of this chunk to the head of the next chunk (curr);
+        // this will change aftern curr's chunk is reversed
+        lastChunkTail = thisChunkTail; // update the last chunk tail to this chunk tail
       }
     }
   }
@@ -222,10 +224,14 @@ public class LinkedList{
     list.addAValue("dog");
     list.addAValue("cat");
     list.addAValue("bee");
-    System.out.println(list.addAValue("ant").getValue());
+    list.addAValue("ant");
     list.addAValue("zebra");
+    list.addAValue("fox");
+    list.addAValue("giraffe");
+    list.addAValue("hippo");
     System.out.println(list.showValues());
-    list.deleteAValue("cat");
+    list.nReverse(3);
     System.out.println(list.showValues());
+
   }
 }
