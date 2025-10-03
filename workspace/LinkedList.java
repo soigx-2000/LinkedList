@@ -16,16 +16,21 @@ Problem:  Write a program that keeps and manipulates a linked list of
 */
 public class LinkedList{
   //instance varialbes go here (think about what you need to keep track of!)
-    int length = -1;
-    ListNode head;
-    ListNode curr;
+    private int length = -1;
+    private ListNode head;
+    private ListNode curr;
   //constructors go here
   public LinkedList(){
     this.head = null;
     this.curr = null;
     this.length = 0;
   }
-
+  public int getLength(){
+    return this.length;
+  }
+  public ListNode getHead(){
+    return this.head;
+  } 
   //precondition: the list has been initialized
   //postcondition: the ListNode containing the appropriate value has been added and returned
   public ListNode addAValue(String line){
@@ -43,6 +48,7 @@ public class LinkedList{
     if (line.compareTo(head.getValue()) < 0){// attach in front: line come before head in alphabet
       ListNode a = head;// store head Node before setting new head node
       head = new ListNode(line, a);
+      curr = null;// set curr back to null once we done recursing
       length++;
       return head;
     }
@@ -100,6 +106,7 @@ public class LinkedList{
         ListNode a = curr.getNext();// get a copy to return before it is gone forever
         curr.setNext(a.getNext());// with no reference to that node what so ever, it is forever forgoten and deleted
         curr = null;// set curr back to null once we done recursing
+        length--;
         return a;
       }
       else if (curr.getNext() == null){// base case 2
@@ -120,6 +127,7 @@ public class LinkedList{
   //postconditions: returns a string containing all values appended together with spaces between.
   public String showValues()
   {
+    System.out.println("show");
     String result = "";
     if (head == null){
       // if head is null, there will be nothing to show;
@@ -178,27 +186,58 @@ public class LinkedList{
       }
       head = prev;
     }
-      public void nReverse(int n){
-        if (length < n){
-        }
-        else{
-          ListNode prev = head;
-          ListNode curr = head.getNext();
-          ListNode next = curr.getNext();
-          for(int i = 0; i < length/n; i++){}
-            for (int j = 1 ,   ; j < n; j++){
-              if(head == prev){
-                prev.setNext(null);
-              }
-              curr.setNext(prev);
-              prev = curr;
-              curr = next;
-            }
-          }
+  }
+  public void nReverse(int n){
+    if (length < n || n < 2){
+      return;
+    }
+    else if(length < 2*n){
+      ListNode prev = null;
+      ListNode curr = head;
+      ListNode next = curr.getNext();
+      ListNode tail = null;
+      for (int j = 0 ; j < n; j++){
+        if(j == 0){
+          tail = curr;
+        } 
+        curr.setNext(prev);
+        prev = curr;
+        curr = next;
+        if (next != null){
+          next = next.getNext();
         }
       }
-
-	}
+      tail.setNext(curr);
+      head = prev;
+    }
+    else{
+      // initialize all of the tracking nodes
+      ListNode prev = null;
+      ListNode curr = head;
+      ListNode next = curr.getNext();
+      ListNode lastChunkTail = null;
+      ListNode thisChunkTail = null;
+      for(int i = 0;  i < length/n; i++){
+        thisChunkTail = curr;
+        for(int j = 0; j < n ; j++){
+          curr.setNext(prev);
+          prev = curr;
+          curr = next;
+          if(next != null){
+            next = next.getNext();
+          }
+        }
+        if(lastChunkTail == null){
+          head = prev;
+        }
+        else{
+          lastChunkTail.setNext(prev);
+        }
+        thisChunkTail.setNext(curr);
+        lastChunkTail = thisChunkTail;
+      }
+    }
+  }
   public static void main(String[] args) {
     LinkedList list = new LinkedList();
     list.addAValue("elephant");
@@ -206,11 +245,8 @@ public class LinkedList{
     list.addAValue("cat");
     list.addAValue("ant");
     list.addAValue("zebra");
-    list.addAValue("bear");
     System.out.println(list.showValues());
-    list.deleteAValue("dog");
-    System.out.println(list.showValues());
-    list.reverse();
+    list.nReverse(3);
     System.out.println(list.showValues());
   }
 }
