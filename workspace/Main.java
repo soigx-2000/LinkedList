@@ -31,11 +31,11 @@ public class Main{
           {
             list.clear();
           }
-          else if(!input.equals("reverse")){
-              System.out.println("I don't know how to "+input);
+          else if(input.length() > 6 && input.substring(0, 7).equals("reverse")){
+            list.reverse();
           }
-          else if(!input.equals("nReverse")){
-              System.out.println("I don't know how to "+input);
+          else if(input.length() > 9 && input.substring(0, 8).equals("nReverse")){
+            list.nReverse((int)(Integer.valueOf(input.substring(9))));
           }
           else if(!input.equals("exit")){
               System.out.println("I don't know how to "+input);
